@@ -6,7 +6,7 @@ import numpy as np
 # Load the pre-trained model
 @st.cache(allow_output_mutation=True)
 def load_model():
-    model = tf.keras.models.load_model('FV_1.h5')
+    model = tf.keras.models.load_model('xxy.h5')
     return model
 
 # Function to preprocess the image
