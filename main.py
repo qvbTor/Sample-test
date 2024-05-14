@@ -6,7 +6,7 @@ import numpy as np
 # Load the pre-trained model
 @st.cache(allow_output_mutation=True)
 def load_model():
-    model = tf.keras.models.load_model('FV_1.h5')
+    model = tf.keras.models.load_model('trained_model.h5')
     return model
 
 # Function to preprocess the image
@@ -24,13 +24,14 @@ def make_prediction(model, img_array):
 
 # Display the prediction result
 def display_prediction(predictions):
-    class_labels = ['Apple', 'Banana', 'Beetroot', 'Bell Pepper', 'Cabbage', 'Capsicum', 'Carrot', 'Cauliflower', 'Chilli Pepper', 'Corn', 
-                    'Cucumber', 'Eggplant', 'Garlic', 'Ginger', 'Grapes', 'Jalapeno', 'Kiwi', 'Lemon', 'Lettuce', 'Mango', 
-                    'Onion', 'Orange', 'Paprika', 'Pear', 'Peas', 'Pineapple', 'Pomegranate', 'Potato', 'Radish', 'Soy Beans', 
-                    'Spinach', 'Sweetcorn', 'Sweetpotato', 'Tomato', 'Turnip', 'Watermelon']
+    class_labels = [
+        'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 
+        'space', 'del', 'nothing'
+    ]
     predicted_class_index = np.argmax(predictions[0])
     predicted_class = class_labels[predicted_class_index]
-    return predicted_class
+    confidence_percentage = np.max(predictions[0]) * 100
+    return predicted_class, confidence_percentage
 
 # Main function to run the Streamlit app
 def main():
@@ -38,11 +39,11 @@ def main():
     model = load_model()
 
     # Set up the Streamlit app layout
-    st.title("Fruits and Vegetables Classifier")
-    st.write("Upload an image of a fruit or vegetable to classify its species.")
+    st.title("Sign Language Classifier")
+    st.write("Upload an image of a sign to classify it.")
 
     # File uploader for image input
-    uploaded_file = st.file_uploader("Choose a fruit or vegetable image...", type=["jpg", "jpeg", "png"])
+    uploaded_file = st.file_uploader("Choose a sign image...", type=["jpg", "jpeg", "png"])
 
     if uploaded_file is not None:
         # Display the uploaded image
@@ -56,8 +57,8 @@ def main():
         predictions = make_prediction(model, img_array)
 
         # Display the prediction result
-        predicted_class = display_prediction(predictions)
-        st.success(f"The predicted fruit or vegetable is: {predicted_class}")
+        predicted_class, confidence_percentage = display_prediction(predictions)
+        st.success(f"The predicted sign is: {predicted_class} with {confidence_percentage:.2f}% confidence")
 
 # Run the Streamlit app
 if __name__ == "__main__":
